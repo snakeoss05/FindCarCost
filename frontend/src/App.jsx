@@ -11,6 +11,7 @@ import Friends from "./components/profile/Friends";
 import Addresses from "./components/profile/Addresses";
 import Ratings from "./components/profile/Ratings";
 import FindCar from "./pages/findCar";
+import PublicProfile from "./pages/PublicProfile";
 function App() {
   return (
     <div>
@@ -25,6 +26,7 @@ function App() {
           <Route path="/profile/addresses" element={<Addresses />} />
           <Route path="/profile/ratings" element={<Ratings />} />
           <Route path="/findcar" element={<FindCar />} />
+          <Route path="/public/profile" element={<PublicProfile />} />
         </Route>
       </Routes>
 

@@ -7,6 +7,7 @@ import { app, server } from "./socket.js";
 import messageRoutes from "./routes/chat.js";
 import express from "express";
 import userRoutese from "./routes/user.js";
+import addressesRoutes from "./routes/Addresses.js";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use("/api/users", userRoutese);
+app.use("/api/address", addressesRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("*", (req, res) => res.status(404).json({ error: "ops not found" }));
 server.listen(PORT, () => {

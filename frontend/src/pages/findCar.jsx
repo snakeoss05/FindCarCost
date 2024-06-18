@@ -1,186 +1,137 @@
 import React, { useEffect, useState } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  Circle,
-  useMapEvents,
-} from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import { geocode } from "../hooks/geocode";
-import { reverseGeocode } from "../hooks/geocode";
-import Slider from "rc-slider";
-import "rc-slider/assets/index.css";
 import Layout from "./Layout";
-
+import Map from "../components/findCar/Map";
+import UserCard from "../components/findCar/UserCard";
+import Loading from "../components/findCar/Loading";
+import FilterBar from "../components/findCar/FilterBar";
+import axios from "axios";
 export default function FindCar() {
-  const [position, setPosition] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [people, setPeople] = useState([]);
   const [address, setAddress] = useState("");
+  const [people, setPeople] = useState([]);
   const [destination, setDestination] = useState("");
-  const [range, setRange] = useState(5000); // Default radius in meters
-  const savedAddress = "1600 Amphitheatre Parkway, Mountain View, CA"; // Replace with your saved address
+  const [filter, setFilter] = useState({
+    city_district: true,
+    city: true,
+    state: true,
+    postcode: true,
+  });
+
+  function ReverseAddress() {
+    setAddress(destination);
+    setDestination(address);
+  }
+  const handleInputs = (e) => {
+    setFilter({ ...filter, [e.target.name]: e.target.checked });
+  };
+  const fetchPeople = async () => {
+    const departureQ = {};
+    departureQ.type = "depart";
+    if (filter.city) departureQ.city = address.city;
+    if (filter.state) departureQ.state = address.state;
+    if (filter.city_district) departureQ.city_district = address.city_district;
+    if (filter.postcode) departureQ.postcode = address.postcode;
+
+    // Build the query for destination
+    const destinationQ = {};
+    destinationQ.type = "destination";
+    if (filter.city) destinationQ.city = destination.city;
+    if (filter.state) destinationQ.state = destination.state;
+    if (filter.city_district)
+      destinationQ.city_district = destination.city_district;
+    if (filter.postcode) destinationQ.postcode = destination.postcode;
+    try {
+      const response = await axios.get(
+        "http://localhost:3000/api/address/getuserbyaddress",
+        { params: { departureQ, destinationQ } }
+      );
+      setPeople(response.data);
+      console.log(response.data);
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
+  };
+  const users = {
+    name: "John",
+    lastname: "Doe",
+    rating: "4.5",
+    reviews: "5",
+  };
 
   useEffect(() => {
-    const fetchPosition = async () => {
-      const result = await geocode(savedAddress);
-      if (result) {
-        setPosition([result.lat, result.lon]);
-      }
-    };
-
-    const fetchPeople = async () => {
-      // Replace with your logic to fetch people and their addresses
-      const peopleAddresses = [
-        "1600 Amphitheatre Parkway, Mountain View, CA",
-        "1 Infinite Loop, Cupertino, CA",
-        "1601 Willow Rd, Menlo Park, CA",
-      ];
-
-      const peoplePositions = await Promise.all(
-        peopleAddresses.map(async (address) => {
-          const pos = await geocode(address);
-          if (!pos) return null;
-
-          return { address, position: [pos.lat, pos.lon] };
-        })
-      );
-      setPeople(peoplePositions);
-    };
-
-    fetchPosition();
-    fetchPeople();
-  }, []);
-
-  const isWithinRange = (personPosition) => {
-    if (!position) return false;
-    const R = 6371000; // Earth's radius in meters
-    const dLat = ((personPosition[0] - position[0]) * Math.PI) / 180;
-    const dLon = ((personPosition[1] - position[1]) * Math.PI) / 180;
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((position[0] * Math.PI) / 180) *
-        Math.cos((personPosition[0] * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in meters
-    return distance <= range;
-  };
-  const LocationSelector = () => {
-    useMapEvents({
-      click: async (e) => {
-        const { lat, lng } = e.latlng;
-        setPosition([lat, lng]);
-        const fetchedAddress = await reverseGeocode(lat, lng);
-        if (address) {
-          setDestination(fetchedAddress);
-        } else {
-          setAddress(fetchedAddress);
-        }
-      },
-    });
-    return null;
-  };
-
+    if (address && destination) fetchPeople();
+  }, [address, destination]);
   return (
     <Layout>
-      <div className="flex flex-col lg:flex-row-reverse ">
-        <div className="w-full h-96 relative flex flex-col lg:p-8 lg:w-[750px] lg:h-[750px] m-auto overflow-hidden ">
-          <MapContainer
-            center={position || [51.505, -0.09]}
-            zoom={10}
-            className="w-full h-full absolute z-0"
-            scrollWheelZoom={false}>
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {position && (
-              <>
-                <Marker position={position}>
-                  <Popup>Your location: {savedAddress}</Popup>
-                </Marker>
-                <Circle center={position} radius={range} />
-              </>
-            )}
-            {people
-              .filter((person) => isWithinRange(person.position))
-              .map((person, idx) => (
-                <Marker key={idx} position={person.position}>
-                  <Popup>{person.address}</Popup>
-                </Marker>
-              ))}
-            <LocationSelector />
-          </MapContainer>
-          <div className="bg-white block p-4 w-full rounded-t-[25px] absolute bottom-0 z-50  overflow-hidden shadow-lg text-center">
-            <p className="text-gray-700 m">Adjust Range (meters): {range}</p>
-            <Slider
-              min={1000}
-              max={20000}
-              step={1000}
-              value={range}
-              onChange={(value) => setRange(value)}
-              style={{ width: "80%", margin: "0 auto" }}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col px-4 gap-4 ">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="label label-text label-sm">
-                Pick your Depart :
-              </label>
-              <select className="select select-bordered w-full max-w-xs ">
-                <option disabled selected>
-                  Select your Depart
-                </option>
-                <option>Default</option>
-                <option>
-                  {address ? address : "Select your depart from map"}
-                </option>
-              </select>
+      <div className="flex flex-col lg:flex-row-reverse overflow-hidden h-full w-full">
+        <Map
+          departure={address}
+          destination={destination}
+          setLoading={setLoading}
+          setAddress={setAddress}
+          setDestination={setDestination}
+        />
+        <div className="flex flex-col px-4  gap-4 h-full overflow-y-auto">
+          <div className="grid grid-cols-8 gap-4 p-4">
+            <div className="flex gap-2 flex-col col-span-1">
+              <i class="fa-solid fa-house-flag text-lg"></i>
+              <i class="fa-solid fa-circle text-[6px]"></i>
+              <i class="fa-solid fa-circle text-[6px]"></i>
+              <i class="fa-solid fa-circle text-[6px]"></i>
+              <i class="fa-solid fa-location-dot text-lg"></i>
             </div>
-
-            <div>
-              <label className="label label-text label-sm">
-                Pick your Destination :
-              </label>
-              <select className="select select-bordered w-full max-w-xs overflow-hidden ">
-                <option disabled selected>
-                  Select your Depart
-                </option>
-                <option>
-                  {address ? address : "Select your destination from map"}
-                </option>
-              </select>
-            </div>
-          </div>
-          {loading && (
-            <span className="loading loading-infinity loading-lg text-blue-500 w-32 mx-auto"></span>
-          )}
-          <div className="grid relative grid-cols-5 z-10 hover:after:opacity-100 after:content-['']  gap-2 p-4 rounded-lg border border-gray-200 after:absolute after:inset-0 after:z-[-1] after:opacity-0 after:bg-gradient-to-r after:from-slate-50 after:to-neutral-300  after:transition-opacity after:ease-in after:duration-500  bg-gradient-to-r from-slate-300 to-neutral-50 opacity-100  ">
-            <div className="relative col-span-1  after:content-['✓'] after:left-1/2 after:ml-4 lg:after:ml-0 after:text-green-500 after:text-center  after:text-white after:rounded-full  after:absolute  after:right-full after:top-2  after:block after:h-6 after:w-6 after:bg-green-500 ">
-              <img
-                src="http://localhost:3000/uploads/1716989317653.png"
-                alt="people"
-                className="w-16 h-16 object-cover ms-2 relative rounded-full "
+            <div className="flex flex-col gap-4 col-span-6">
+              <input
+                type="text"
+                placeholder="Choose a starting point or click on the map…"
+                className="input input-bordered w-full"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Choose a destination or click on the map…"
+                className="input input-bordered w-full  "
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
               />
             </div>
-
-            <div className="col-span-3 text-center">
-              <span className="text-2xl font-bold mb-2 me-2 text-nowrap">
-                John Doe
-              </span>
-              <span className="text-gray-500">5.0/5.0 </span>
-              <p className="text-gray-500 text-sm">Number of reviews : 5</p>
+            <div className="col-span-1 flex flex-col justify-evenly">
+              <i
+                className="fa-solid fa-delete-left text-lg hover:text-red-500 transition duration-300 hover:scale-110"
+                onClick={() => {
+                  setAddress("");
+                }}></i>
+              <svg
+                width="21px"
+                height="21px"
+                onClick={ReverseAddress}
+                viewBox="0 0 21 21"
+                xmlns="http://www.w3.org/2000/svg"
+                className="rotate-90 text-gray-500 h-6 w-6 cursor-pointer hover:text-blue-700 transition duration-300 hover:scale-110">
+                <g
+                  fill="none"
+                  fillRule="evenodd"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  transform="translate(4 2)">
+                  <path d="m4.5 8.5-4 4 4 4" />
+                  <path d="m12.5 12.5h-12" />
+                  <path d="m8.5.5 4 4-4 4" />
+                  <path d="m12.5 4.5h-12" />
+                </g>
+              </svg>
+              <i
+                className="fa-solid fa-delete-left text-lg hover:text-red-500 transition duration-300 hover:scale-110"
+                onClick={() => setDestination("")}></i>
             </div>
-            <div className="col-span-1 flex text-center">
-              <i className="fa-solid fa-user text-2xl text-sky-300 m-4 hover:text-sky-500"></i>
-            </div>
+          </div>
+          <FilterBar filter={filter} setFilter={handleInputs} />
+          {loading && <Loading />}
+          <div className="flex flex-col gap-4 overflow-y-auto">
+            <UserCard users={users} />
           </div>
         </div>
       </div>

@@ -26,6 +26,18 @@ const userSchema = new Schema({
     required: true,
   },
   friends: [FriendSchema],
+  addresses: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Address",
+    },
+  ],
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Review",
+    },
+  ],
   isVerified: { type: Boolean },
 });
 async function sendVerificationEmail(email, otp) {

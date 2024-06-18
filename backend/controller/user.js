@@ -116,6 +116,7 @@ export async function getFriends(req, res) {
     return res.status(400).json({ err: "Bad Request: " + err.message });
   }
 }
+
 export async function emailVerify(req, res) {
   const { otp, email } = await req.body;
   try {

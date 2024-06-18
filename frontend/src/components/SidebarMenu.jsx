@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 export default function SidebarMenu() {
   const { user, logOut } = useAuth();
   return (
-    <div className="absolute lg:relative bottom-0 w-full  flex flex-row lg:h-screen lg:flex-col lg:justify-between border-e bg-white lg:w-fit overflow-hidden z-50">
+    <div className="absolute lg:relative bottom-0 w-full  flex flex-row lg:h-screen lg:flex-col lg:justify-between border-e bg-white lg:w-fit  z-50">
       <div className="p-3 lg:px-4 lg:py-6 w-full lg:w-fit  ">
         <div>
           <img
@@ -143,8 +143,8 @@ export default function SidebarMenu() {
       </div>
 
       <div className="hidden lg:block lg:sticky inset-x-0 bottom-0 border-t border-gray-100  items-center ">
-        <a
-          href="#"
+        <Link
+          to="/profile"
           className="flex flex-col lg:flex-row items-center gap-2 bg-white p-4 hover:bg-gray-50">
           <img
             alt="profile picture"
@@ -163,7 +163,7 @@ export default function SidebarMenu() {
               </span>
             </p>
           </div>
-        </a>
+        </Link>
       </div>
     </div>
   );

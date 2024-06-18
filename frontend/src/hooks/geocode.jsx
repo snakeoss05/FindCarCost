@@ -30,7 +30,7 @@ export const reverseGeocode = async (lat, lon) => {
     const response = await axios.get(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
     );
-    return response.data.display_name;
+    return response.data;
   } catch (error) {
     console.error("Error during reverse geocoding:", error);
     return null;
