@@ -45,15 +45,15 @@ export const deleteAddress = async (req, res) => {
 };
 
 export const getUserByAddress = async (req, res) => {
-  const { departureQ, destinationQ } = req.params;
+  const { departureQuery, destinationQuery } = req.body;
 
-  if (!departureQ || !destinationQ) {
+  if (!departureQuery || !destinationQuery) {
     return res.status(400).json({ message: "Invalid address data" });
   }
 
   try {
     const matchedAddresses = await Address.find({
-      $and: [{ $or: [departureQ] }, { $or: [destinationQ] }],
+      $and: [{ $or: [departureQuery] }, { $or: [destinationQuery] }],
     }).populate({
       path: "userId",
       select: "name lastname profilePicture",

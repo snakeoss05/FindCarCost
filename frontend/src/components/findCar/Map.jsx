@@ -36,21 +36,6 @@ export default function Map({
     }
   }, [destination, departure]);
 
-  const isWithinRange = (personPosition) => {
-    if (!homePosition) return false;
-    const R = 6371000; // Earth's radius in meters
-    const dLat = ((personPosition[0] - homePosition[0]) * Math.PI) / 180;
-    const dLon = ((personPosition[1] - homePosition[1]) * Math.PI) / 180;
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((position[0] * Math.PI) / 180) *
-        Math.cos((personPosition[0] * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in meters
-    return distance <= range;
-  };
   const LocationSelector = () => {
     useMapEvents({
       click: async (e) => {
@@ -63,9 +48,9 @@ export default function Map({
 
         const fetchedAddress = await reverseGeocode(lat, lng);
         if (departure) {
-          setDestination(fetchedAddress.display_name);
+          setDestination(fetchedAddress);
         } else {
-          setAddress(fetchedAddress.display_name);
+          setAddress(fetchedAddress);
         }
       },
     });
@@ -106,15 +91,15 @@ export default function Map({
             version="1.1"
             id="Capa_1"
             xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
             viewBox="0 0 297 297"
-            xml:space="preserve"
+            xmlSpace="preserve"
             stroke="#3dc5ff">
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
             <g
               id="SVGRepo_tracerCarrier"
-              stroke-linecap="round"
-              stroke-linejoin="round"></g>
+              strokeLinecap="round"
+              strokeLinejoin="round"></g>
             <g id="SVGRepo_iconCarrier">
               {" "}
               <g>
@@ -159,21 +144,12 @@ export default function Map({
       </div>
 
       <div
-        className="bg-white px-4 py-4 w-full  rounded-t-[25px] translate-y-[-10%]  z-50  text-center"
+        className="bg-white p-2 lg:p-4 w-full  rounded-t-[25px] translate-y-[-30%]  z-50  text-center"
         style={{ boxShadow: "rgba(0, 0, 0, 0.15) 0px -20px 20px 0px" }}>
         <i
           className="fa-solid fa-arrow-up transition-transform transition-time-300 transition text-xl lg:hidden hover:text-gray-700 hover:cursor-pointer transition duration-300 "
           onClick={() => setShow(!show)}
           style={{ transform: show ? "rotate(0deg)" : "rotate(180deg)" }}></i>
-        <p className="text-gray-700 m">Adjust Range (meters): {range}</p>
-        <Slider
-          min={1000}
-          max={10000}
-          step={1000}
-          value={range}
-          onChange={(value) => setRange(value)}
-          style={{ width: "80%", margin: "0 auto" }}
-        />
       </div>
     </div>
   );

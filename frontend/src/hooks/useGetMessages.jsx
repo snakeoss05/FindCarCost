@@ -13,7 +13,7 @@ export default function useGetMessages() {
       setLoading(true);
       try {
         const res = await fetch(
-          `http://localhost:3000/api/messages/${selectedConversation._id}`,
+          `http://192.168.1.2:3000/api/messages/${selectedConversation._id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

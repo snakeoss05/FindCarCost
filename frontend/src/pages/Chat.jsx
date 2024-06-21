@@ -12,7 +12,7 @@ export default function Chat() {
       <div className="h-full w-full sm:h-[450px] lg:w-[450px] md:h-screen rounded-lg overflow-hidden  bg-clip-padding backdrop-filter backdrop-blur-lg   px-2 ">
         {selectedConversation && (
           <i
-            class="fa-solid fa-angle-left hover:scale-125 transition duration-300  hover:cursor-pointer absolute top-8 text-lg left-2"
+            className="fa-solid fa-angle-left hover:scale-125 transition duration-300  hover:cursor-pointer absolute top-8 text-lg left-2"
             onClick={clsoeConversation}></i>
         )}
 

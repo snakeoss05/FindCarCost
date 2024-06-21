@@ -20,7 +20,7 @@ export default function MessageContainer() {
     }
   }, [selectedConversation]);
   return (
-    <div className="w-full md:w-[450px] flex flex-col p-4 h-full">
+    <div className="w-full md:w-[450px] flex flex-col p-4 h-full overflow-y-auto">
       {!selectedConversation ? (
         ""
       ) : (

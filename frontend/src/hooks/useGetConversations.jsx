@@ -10,7 +10,7 @@ export default function useGetConversations() {
     const getConversations = async () => {
       setLoading(true);
       try {
-        const res = await fetch("http://localhost:3000/api/messages/users", {
+        const res = await fetch("http://192.168.1.2:3000/api/messages/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

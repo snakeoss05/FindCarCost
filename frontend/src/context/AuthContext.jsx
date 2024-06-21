@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
   const loginAction = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/users/login",
+        "http://192.168.1.2:3000/api/users/login",
         data
       );
 
@@ -33,20 +33,24 @@ const AuthProvider = ({ children }) => {
     }
   };
   const updateAction = async (data) => {
-   try {
-   const response=   await axios.put("http://localhost:3000/api/users/update", data, {
+    try {
+      const response = await axios.put(
+        "http://192.168.1.2:3000/api/users/update",
+        data,
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        });
+        }
+      );
       localStorage.setItem("user", JSON.stringify({ ...user, ...data }));
-      setUser((oldUser)=>({...oldUser,...data}));
-      
+      setUser((oldUser) => ({ ...oldUser, ...data }));
+
       toast.success("Account details updated successfully");
     } catch (err) {
-     
       toast.error(err.response.data.message);
-    }}
+    }
+  };
   const logOut = () => {
     setUser(null);
     setToken("");
@@ -56,7 +60,8 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, loginAction, logOut,setUser,updateAction }}>
+    <AuthContext.Provider
+      value={{ token, user, loginAction, logOut, setUser, updateAction }}>
       {children}
     </AuthContext.Provider>
   );

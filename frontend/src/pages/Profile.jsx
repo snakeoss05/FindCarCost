@@ -6,11 +6,11 @@ export default function Profile() {
   const { user } = useAuth();
   return (
     <Layout>
-      <div className="w-full lg:w-[500px]">
+      <div className="w-full h-full lg:w-[500px] p-4 pb-12 lg:p-8 overflow-y-auto">
         <div className="p-4">
           <img
             src={user.profilePicture}
-            className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-sky-500 shadow-xl"
+            className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-gray-200 shadow-md"
           />
           <div className="text-center mt-4 gap-2">
             <p className="text-2xl font-bold text-gray-700">
@@ -19,7 +19,7 @@ export default function Profile() {
             </p>
             <p className="text-gray-500 text-sm">{user.email}</p>
             <Link to="/accounts/details">
-              <button className="btn btn-primary btn-sm mt-4">
+              <button className="btn btn-outline btn-sm mt-4">
                 Edit Profile
               </button>
             </Link>
@@ -27,7 +27,7 @@ export default function Profile() {
         </div>
         <div>
           <div className="divider my-0 py-0 h-1" />
-          <ul className="menu p-4">
+          <ul className="menu p-4 ">
             <li>
               <Link
                 to="/profile/friends"

@@ -75,7 +75,7 @@ export async function Register(req, res) {
 
     const imageUrlUnique = filePath.split("\\").join("/");
 
-    const imageUrl = `http://localhost:3000/${imageUrlUnique}`;
+    const imageUrl = `http://192.168.1.2:3000/${imageUrlUnique}`;
 
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);

@@ -2,7 +2,7 @@ import React from "react";
 import Toggle from "../inputs/Toggle";
 export default function FilterBar({ filter, setFilter }) {
   return (
-    <div className="px-4 mb-2 grid grid-cols-2 gap-x-8 gap-y-4">
+    <div className="px-4 mb-2 grid grid-cols-2 gap-x-4 lg:gap-x-8 gap-y-4 ">
       <Toggle name="state" checked={filter.state} onChange={setFilter} />
       <Toggle name="city" checked={filter.city} onChange={setFilter} />
       <Toggle

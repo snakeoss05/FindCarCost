@@ -32,7 +32,7 @@ export default function Otp({ email, password }) {
     };
 
     try {
-      await axios.post("http://localhost:3000/api/users/verify", data);
+      await axios.post("http://192.168.1.2:3000/api/users/verify", data);
       loginAction({ email: email, password: password });
       toast.success("Email verified successfully");
       setLoading(false);
@@ -74,7 +74,7 @@ export default function Otp({ email, password }) {
                 <div className="flex flex-col space-y-5">
                   <div>
                     {loading ? (
-                      <span class="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-center text-white loading loading-infinity loading-lg"></span>
+                      <span className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-center text-white loading loading-infinity loading-lg"></span>
                     ) : (
                       <button
                         className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 border-blue-600 bg-blue-600 border-none text-white text-sm shadow-sm"

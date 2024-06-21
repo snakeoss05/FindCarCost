@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "./Layout";
-export default function PublicProfile() {
+import Modal from "../components/Modal";
+export default function PublicProfile({id}) {
+  const [publicProfile, setPublicProfile] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
+  useEffect(() => {
+    
+  })
   return (
     <Layout>
-      <div>PublicProfile</div>
+      <Modal>PublicProfile</Modal>
     </Layout>
   );
 }

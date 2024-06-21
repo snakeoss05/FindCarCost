@@ -13,6 +13,6 @@ router.post("/create", createAddress);
 router.get("/myAddresses/:id", getAddress);
 router.put("/update/:id", updateAddress);
 router.delete("/delete/:id", deleteAddress);
-router.get("/getuserbyaddress", getUserByAddress);
+router.post("/getuserbyaddress", getUserByAddress);
 
 export default router;

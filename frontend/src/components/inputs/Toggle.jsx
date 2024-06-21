@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Toggle(props) {
   return (
-    <div className="flex items-center justify-between capitalize">
+    <div className="flex items-center justify-between capitalize ">
       <label
         htmlFor={props.name}
         className="mr-2 text-gray-700 text-sm font-medium">

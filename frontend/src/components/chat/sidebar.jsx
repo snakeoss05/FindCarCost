@@ -9,7 +9,7 @@ export default function Sidebar() {
   const handleSearch = async (query) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/users/getFriends?query=${query}`
+        `http://192.168.1.2:3000/api/users/getFriends?query=${query}`
       );
       setResults(response.data);
     } catch (err) {

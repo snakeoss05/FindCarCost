@@ -15,7 +15,7 @@ export default function Messages() {
   }, [messages]);
 
   return (
-    <div className="px-4 py-2 flex-1 overflow-auto rounded-md bg-slate-50 min-h-[500px] w-full">
+    <div className="px-4 py-2 flex-1  overflow-auto rounded-md bg-slate-50 h-full w-full">
       {!loading &&
         messages.length > 0 &&
         messages?.map((message) => (

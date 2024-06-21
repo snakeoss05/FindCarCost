@@ -50,7 +50,7 @@ export default function SignUp() {
     }
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/users/register",
+        "http://192.168.1.2:3000/api/users/register",
         formData
       );
       setLoading(false);
@@ -280,7 +280,7 @@ export default function SignUp() {
 
                   <div className="col-span-6  sm:flex sm:items-center sm:gap-4">
                     {loading ? (
-                      <span class="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white loading loading-infinity loading-lg"></span>
+                      <span className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white loading loading-infinity loading-lg"></span>
                     ) : (
                       <button
                         className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"

@@ -20,7 +20,7 @@ app.use("/uploads", express.static("uploads"));
 const PORT = process.env.PORT || 8000;
 app.use(
   cors({
-    origin: "http://localhost:5173", // Change to your client's origin
+    origin: "http://192.168.1.2:5173", // Change to your client's origin
     credentials: true,
   })
 );

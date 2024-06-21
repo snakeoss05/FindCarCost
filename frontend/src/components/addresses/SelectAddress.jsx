@@ -28,11 +28,11 @@ export default function SelectAddress({ setAddress, address }) {
   };
 
   return (
-    <div className="w-full h-full  h-[300px] rounded-lg transition-all duration-300 ease-in relative mt-0  lg:w-[450px] lg:h-[450px] m-auto overflow-hidden ">
+    <div className="w-full   h-[300px] rounded-lg  lg:w-[450px] lg:h-[450px] m-auto overflow-hidden z-10">
       <MapContainer
         center={position || [36.826461108709594, 10.127514077760775]}
         zoom={10}
-        className={`w-full h-full  z-0 `}
+        className="w-full h-full"
         scrollWheelZoom={true}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {position && (
